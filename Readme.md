@@ -62,25 +62,53 @@ ssh -i E:/downloads/gavrilkaAWS.pem ubuntu@18.216.134.207
 * sudo apt-get update (*Апдейт сервера*)
 * sudo apt install python3-pip
 * pip3 install -r req.txt **Возможно не надо и докер сам установит всё**
+#### Установка супервайзера (возможно не надо для webhook + docker)
+* sudo su
+* apt-get install supervisor -y
+* exit
 ## ЭТАП 5: ЗАЛИВКА БОТА
 ### Вариант с git
 1. Создаем репозиторий, добавляем весь код в открытый доступ.
 2. git clone https:// (указываем ссылку на репозиторий)
 ### Скопировать всё из PyCharm по SSH
-* scp -i E:/downloads/gavrilkaAWS.pem -r <полный путь папки для копирования> ubuntu@<IPv4>:/home/ubuntu
+* scp -i E:/downloads/gavrilkaAWS.pem -r <полный путь папки для копирования> ubuntu@IP:/home/ubuntu
 ### WinSCP (мой выбор)
 1. скачиваем WinSCP с офф сайта. Подключаемся используя сохраненное putty соединение.
-
-## ЭТАП 6: СОЗДАНИЕ WEBHOOK КЛЮЧА
+## ЭТАП 6: УСТАНОВКА DOCKER
+1. Убедитесь, что у вас установлен Git. Если нет, поиск google
+2. [Скачать докер с офф сайта и установить](https://www.docker.com)
+3. Подключаемся к нашему серверу:
+ssh -i E:/downloads/gavrilkaAWS.pem ubuntu@18.216.134.207
+4. Выполняем следующие команды по установке докере на сервере:
+* sudo apt-get install docker docker-compose -y
+## Установка PostgreSQL
+Скачать с офф сайта и установить. Нам далее потребуется PgAdmin
+## ЭТАП 7: СОЗДАНИЕ WEBHOOK КЛЮЧА
+1. Подключаемся к серверу по SSH. Заходим под root:
+* sudo su
+2. Открываем файл ssl_generate.sh Копируем команды и вставляем:
+openssl genrsa -out webhook_pkey.pem 2048 &&\
+openssl req -new -x509 -days 3650 -key webhook_pkey.pem -out webhook_cert.pem
+Отвечаем на вопросы. Самое главное **Common name** надо ввести IPv4 сервера
+Проверяем что сертификат и ключ создались командой **ls**
 ## ЗАПУСК DOCKER-COMPOSE
+### Настроем дополнительно firewall:
+* sudo ufw status
+* sudo ufw enable
+* sudo ufw allow 8443
+* sudo ufw allow 22
+### Запуск докера
+Убедитесь, что файлы docker, docker-compose.yml загружены в папку бота.
+* sudo docker-compose up
+* sudo docker-compose up --build (Если были внесены изменения в боте)
+### Команды для работы:
+* CTRL + Z - отсоединиться от докера.
+* Чтобы вернуться обратно в логи: sudo docker-compose up
+* CTRL + C - остановить бота. Повторное нажатие убьёт эти процессы.
 
-
-
-
-
-Security Groups:
-Inbound rules:
-
-
-
+### Убедиться, что на сервере ничего не запущено:
+* sudo su (зайти под root)
+* docker ps -a (посмотреть что запущено)
+* docker rm bot database (удалить что запущено)
+* exit (выйти из root)
 
