@@ -56,11 +56,23 @@ ssh -i E:/downloads/gavrilkaAWS.pem ubuntu@18.216.134.207
 * nano name.txt **создание файла name.txt в текущей директории**
 * which python3 **где находиться python3**
 * python3 -V **узнать версию python3**
+* pip3 install -r req.txt Установить необходимые библиотеки
 ### НАСТРОЙКА
+Прописывает данные команды в через SSH. По порядку.
 * sudo apt-get update (*Апдейт сервера*)
 * sudo apt install python3-pip
-## ЭТАП 5: СОЗДАНИЕ WEBHOOK КЛЮЧА
-## ЭТАП 6: ЗАЛИВКА БОТА И ЗАПУСК DOCKER-COMPOSE
+* pip3 install -r req.txt **Возможно не надо и докер сам установит всё**
+## ЭТАП 5: ЗАЛИВКА БОТА
+### Вариант с git
+1. Создаем репозиторий, добавляем весь код в открытый доступ.
+2. git clone https:// (указываем ссылку на репозиторий)
+### Скопировать всё из PyCharm по SSH
+* scp -i E:/downloads/gavrilkaAWS.pem -r <полный путь папки для копирования> ubuntu@<IPv4>:/home/ubuntu
+### WinSCP (мой выбор)
+1. скачиваем WinSCP с офф сайта. Подключаемся используя сохраненное putty соединение.
+
+## ЭТАП 6: СОЗДАНИЕ WEBHOOK КЛЮЧА
+## ЗАПУСК DOCKER-COMPOSE
 
 
 
