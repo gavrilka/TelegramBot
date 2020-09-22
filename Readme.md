@@ -1,4 +1,5 @@
-#ГАЙД ПО ДЕПЛОЮ БОТА НА СЕРВЕРЕ AMAZON с WEBHOOK:
+#ГАЙД ПО ДЕПЛОЮ БОТА НА СЕРВЕРЕ AMAZON с WEBHOOK
+
 ##ЭТАП 1: РЕГИСТРАЦИЯ НА СЕРВЕРЕ АМАЗОН
 Есть различные сервера. Amazon Web Services, Microsoft Azure, Alibaba Cloud, Google
 Выбираем Amazon Web Services
