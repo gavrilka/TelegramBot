@@ -1,0 +1,39 @@
+version: '3.1'
+
+services:
+  db:
+    container_name: database
+    image: sameersbn/postgresql:10-2
+    environment:
+      PG_PASSWORD: $PGPASSWORD
+    restart: always
+    ports:
+      - 5432:5432
+    networks:
+      - botnet
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
+  tgbot:
+    container_name: bot
+    build:
+      context: .
+    command: python app.py
+    restart: always
+    environment:
+      WEBAPP_PORT: 3001
+    env_file:
+      - ".env"
+    # bot start after load db
+    depends_on:
+      - db
+    ports:
+      - 8443:3001
+    networks:
+      - botnet
+
+
+networks:
+      botnet:
+        driver: bridge
+
