@@ -105,10 +105,23 @@ openssl req -new -x509 -days 3650 -key webhook_pkey.pem -out webhook_cert.pem
 * CTRL + Z - отсоединиться от докера.
 * Чтобы вернуться обратно в логи: sudo docker-compose up
 * CTRL + C - остановить бота. Повторное нажатие убьёт эти процессы.
+* sudo docker-compose stop
+* sudo docker system prune -a
+* sudo docker-compose up --build
+* sudo docker-compose up --build --remove-orphans
 
 ### Убедиться, что на сервере ничего не запущено:
 * sudo su (зайти под root)
-* docker ps -a (посмотреть что запущено)
+* docker ps -a(посмотреть что запущено)
 * docker rm bot database (удалить что запущено)
 * exit (выйти из root)
-
+* docker image ls
+* docker image prune -all
+* sudo docker-compose images (посмотреть образы)
+* sudo docker-compose rm (удалить образ)
+* sudo docker system prune -a (удалить контейнеры)
+### Запуск бота в фоне с помощью supervisor
+* sudo cp bot.conf /etc/supervisor/conf.d/bot.conf (переместить файл конфа)
+* sudo supervisorctl reread (перечитать)
+* sudo supervisorctl update
+* 

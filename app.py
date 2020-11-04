@@ -3,7 +3,7 @@ from aiogram.utils.executor import start_webhook
 from data.config import WEBHOOK_URL, WEBHOOK_PATH, WEBAPP_HOST, WEBAPP_PORT, admins
 from loader import SSL_CERTIFICATE, ssl_context, bot, db
 from utils.set_bot_commands import set_default_commands
-
+from utils.db_api import db_gino
 
 
 async def on_startup(dp):
@@ -27,23 +27,36 @@ async def on_startup(dp):
     middlewares.setup(dp)
 
     from utils.notify_admins import on_startup_notify
-    await db.create_table_users()
+    # await db.create_table_users()
+    print("Подключаем БД")
+    await db_gino.on_startup(dp)
+    print("Готово")
+
+    # print("Чистим базу")
+    # await db.gino.drop_all()
+    #
+    # print("Готово")
+
+    print("Создаем таблицы")
+    await db.gino.create_all()
+
+    print("Готово")
     await on_startup_notify(dp)
     await set_default_commands(dp)
 
 
-async def on_shutdown(dp):
+# async def on_shutdown(dp):
     # insert code here to run it before shutdown
 
     # Send message to admin
-    await bot.send_message(admins[0], "Я выключен!")
+    # await bot.send_message(admins[0], "Я выключен!")
 
     # Close bot
-    await bot.close()
+    # await bot.close()
 
     # Close DB connection (if used)
-    await dp.storage.close()
-    await dp.storage.wait_closed()
+    # await dp.storage.close()
+    # await dp.storage.wait_closed()
 
 
 if __name__ == '__main__':

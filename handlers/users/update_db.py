@@ -3,11 +3,12 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import Command
 from aiogram.utils.markdown import hcode
 
-from loader import dp, db
+from loader import dp
+from utils.db_api import quick_commands as commands
+from filters import IsPrivate
 
-
-@dp.message_handler(Command("email"))
-async def bot_get_email(message: types.Message, state: FSMContext):
+@dp.message_handler(Command("email"), IsPrivate())
+async def bot_start(message: types.Message, state: FSMContext):
     await message.answer("Пришли мне свой имейл")
     await state.set_state("email")
 
@@ -15,10 +16,10 @@ async def bot_get_email(message: types.Message, state: FSMContext):
 @dp.message_handler(state="email")
 async def enter_email(message: types.Message, state: FSMContext):
     email = message.text
-    await db.update_user_email(email, message.from_user.id)
-    user = await db.select_user(id=message.from_user.id)
+    await commands.update_user_email(email=email, id=message.from_user.id)
+    user = await commands.select_user(id=message.from_user.id)
     await message.answer("Данные обновлены. Запись в БД: \n" +
-                         hcode("id={id}\n"
-                               "name={name}\n"
-                               "email={email}".format(**user)))
+                         hcode(f"id={user.id}\n"
+                               f"name={user.name}\n"
+                               f"email={user.email}"))
     await state.finish()
